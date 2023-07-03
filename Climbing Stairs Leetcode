@@ -1,0 +1,63 @@
+class Solution {
+public:
+// Recursive Solution
+    int rec(int n)
+    {
+        if(n==0||n==1||n==2)
+        return n;
+        int ans=rec(n-2)+rec(n-1);
+        return ans;
+    }
+
+// Top down Dp/Memoization
+    int topdowndpsol(vector<int> &dp,int n)
+    {
+        if(n==1||n==2)
+        return n;
+        if(dp[n]!=-1)
+        return dp[n];
+        dp[n]=topdowndpsol(dp,n-2)+topdowndpsol(dp,n-1);
+        return dp[n];
+    }  
+
+// Bottom up Dp/Tabulation
+    int bottomupdp(int n)
+    {
+         vector<int> dp(n+1,-1);
+         dp[0]=0;
+         dp[1]=1;
+         if(n==1)
+         return n;
+         dp[2]=2;
+         for(int i=3;i<=n;i++)
+         {
+             dp[i]=dp[i-1]+dp[i-2];
+         }
+         return dp[n];
+    }
+// Space Optimization 
+    int space(int n)
+    {
+        if(n==0||n==1||n==2)
+        return n;
+          int pre1=2;
+           int pre2=1;
+           int curr=pre1+pre2;
+           for(int i=3;i<=n;i++)
+           {
+               curr=pre1+pre2;
+               pre2=pre1;
+               pre1=curr;
+           }
+           return curr;
+    }
+    int climbStairs(int n) {
+    // vector<int> dp(n+1,-1);
+    // int ans=dpsol(dp,n);    
+    // return ans;
+    // int ans=space(n);    
+    // return ans;
+    int ans=rec(n);    
+    return ans;
+    }
+};
