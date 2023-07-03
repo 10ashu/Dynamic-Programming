@@ -1,0 +1,82 @@
+class Solution {
+public:
+    // Memoization
+    int topupdp(vector<int>& coins, int amount,long long sum,vector<int>& dp)
+    {
+      if(amount==sum)
+      return 0;
+      if(amount<sum)
+      return INT_MAX;
+      if(dp[sum]!=-1)
+      return dp[sum];
+      int mini=INT_MAX;
+      for(int i=0;i<coins.size();i++)
+      {
+          int ans=topupdp(coins,amount,sum+coins[i],dp);
+          if(ans!=INT_MAX)
+          mini=min(mini,ans+1);
+      }
+      dp[sum]=mini;
+      return dp[sum];
+    }
+    // BottomUP dp
+    int tabulation(vector<int>& coins, int amount)
+    {
+        vector<int> dp(amount+1,INT_MAX);
+        dp[0]=0;
+        for(int target=1;target<=amount;target++)
+        {
+            int mini=INT_MAX;
+            for(int i=0;i<coins.size();i++)
+            {
+                if(target-coins[i]>=0){
+                int ans=dp[target-coins[i]];
+                if(ans!=INT_MAX)
+                mini=min(mini,ans+1);
+                }
+            }
+            dp[target]=mini;
+        }
+        return dp[amount];
+    }
+    // Recursive Solution
+    int towardssum(vector<int>& coins, int amount,long long sum)
+    {
+       if(amount==sum)
+       return 0;
+       if(amount<sum)
+       return INT_MAX;
+       int mini=INT_MAX;
+       for(int i=0;i<coins.size();i++)
+       {
+           int ans=towardssum(coins,amount,sum+coins[i]);
+           if(ans!=INT_MAX)
+           {
+               mini=min(mini,ans+1);
+           }
+       }
+       return mini;
+    }
+    int coinChange(vector<int>& coins, int amount) {
+        // int sum=0;
+        // int ans=towardssum(coins,amount,sum);
+        // if(ans!=INT_MAX)
+        // return ans;
+        // else
+        // return -1;
+        // int sum=0;
+        // vector<int> dp(amount+1,-1);
+        // int ans=topupdp(coins,amount,sum,dp);
+        // if(ans!=INT_MAX)
+        // return ans;
+        // else
+        // return -1;
+        int ans=tabulation(coins,amount);
+        if(ans!=INT_MAX)
+        return ans;
+        else
+        return -1;
+
+
+    }
+};
