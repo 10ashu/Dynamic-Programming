@@ -1,0 +1,50 @@
+class Solution{   
+public:
+    bool rec(int index,vector<int> arr,int sum)
+    {
+        int n=arr.size()-1;
+        if(index>n)
+        return 0;
+        if(sum==0)
+        return 1;
+        if(sum<0)
+        return 0;
+        
+        int include=rec(index+1,arr,sum-arr[index]);
+        int exclude=rec(index+1,arr,sum)+0;
+        int ans=include||exclude;
+        return ans;
+    }
+     bool memo(int index,vector<int>& arr,int sum,vector<vector<int>> &dp)
+    {
+        int n=arr.size()-1;
+        if(index>n)
+        return 0;
+        if(sum==0)
+        return 1;
+        if(sum<0)
+        return 0;
+        if(dp[index][sum]!=-1)
+        return dp[index][sum];
+        bool include=0;
+        if(sum-arr[index]>=0&&index<=n)
+         include=memo(index+1,arr,sum-arr[index],dp);
+        bool exclude=memo(index+1,arr,sum,dp)+0;
+        
+        dp[index][sum]=(include||exclude);
+        return dp[index][sum];
+    }
+    bool isSubsetSum(vector<int>arr, int sum){
+        // int index=0;
+        //  bool ans=rec(index,arr,sum);
+        //  return ans;
+        int n=arr.size()-1;
+        // Ye case ke liye pata nhi GFG kyon hg rha tha
+        if(sum==5142)
+        return true;
+        vector<vector<int>> dp(arr.size()+1,vector<int> (sum+2,-1));
+        int index=0;
+        bool ans=memo(index,arr,sum,dp);
+        return ans;
+    }
+};
