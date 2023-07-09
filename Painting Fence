@@ -1,0 +1,70 @@
+#define MOD 1000000007
+class Solution{
+    public:
+    long long solverec(int n,int k)
+    {
+        if(n==1)
+        return k;
+        if(n==2)
+        return k+(k*(k-1));
+        
+        long long ans=((k-1)*(solverec(n-1,k)%MOD+solverec(n-2,k)%MOD))%MOD;
+        return ans;
+        
+        
+    }
+    long long solvememo(int n,int k,vector<int>&dp)
+    {
+        if(n==1)
+        return k;
+        if(n==2)
+        return k+(k*(k-1));
+        if(dp[n]!=-1)
+        return dp[n];
+        long long ans=((k-1)*(solvememo(n-1,k,dp)%MOD+solvememo(n-2,k,dp)%MOD))%MOD;
+        dp[n]=ans;
+        return dp[n];
+        
+        
+    }
+    long long tabulation(int n,int k)
+    {
+        vector<long long> dp(n+1,0);
+        dp[1]=k;
+        dp[2]=k+(k*(k-1));
+        for(int i=3;i<=n;i++)
+        {
+             long long ans=((k-1)*(dp[i-1]%MOD+dp[i-2]%MOD))%MOD;
+              dp[i]=ans;
+        }
+        return dp[n];
+    }
+     long long SO(int n,int k)
+    {
+        if(n==1)
+        return k;
+        long long pre2=k;
+        long long pre1=k+(k*(k-1));
+        for(int i=3;i<=n;i++)
+        {
+             long long curr=((k-1)*(pre1%MOD+pre2%MOD))%MOD;
+              pre2=pre1;
+              pre1=curr;
+              
+             
+              
+        }
+        return pre1;
+    }
+    long long countWays(int n, int k){
+        // long long ans=solverec(n,k);
+        // return ans; 
+        // vector<int> dp(n+1,-1);
+        // long long ans=solvememo(n,k,dp);
+        // return ans;
+        // long long ans=tabulation(n,k);
+        // return ans;
+        long long ans=SO(n,k);
+        return ans;
+    }
+};
