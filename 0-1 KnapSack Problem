@@ -1,0 +1,132 @@
+class Solution
+{
+    public:
+    //Function to return max value that can be put in knapsack of capacity W.
+    int solverec(int capacity,int wt[],int val[],int n)
+    {
+      if(n==0)
+      {
+          if(wt[0]<=capacity)
+          return val[0];
+          else
+          return 0;
+      }
+      // include
+      int include=0,exclude=0;
+      if(wt[n]<=capacity)
+      include=solverec(capacity-wt[n],wt,val,n-1)+val[n];
+      exclude=solverec(capacity,wt,val,n-1)+0;
+      return max(include,exclude);
+    }
+    int memo(int capacity,int wt[],int val[],int n,vector<vector<int>> &dp)
+    {
+          if(n==0)
+      {
+          if(wt[0]<=capacity)
+          return val[0];
+          else
+          return 0;
+      }
+      if(dp[n][capacity]!=-1)
+      return dp[n][capacity];
+      // include
+      int include=0,exclude=0;
+      if(wt[n]<=capacity)
+      include=memo(capacity-wt[n],wt,val,n-1,dp)+val[n];
+      exclude=memo(capacity,wt,val,n-1,dp)+0;
+      dp[n][capacity]=max(include,exclude);
+      return dp[n][capacity];
+         
+     }
+     int tabulation(int capacity,int wt[],int val[],int n)
+     {
+         vector<vector<int>> dp(n+2,vector<int>(capacity+1,0));
+         for(int w=wt[0];w<=capacity;w++)
+         {
+             if(wt[0]<=capacity)
+             dp[0][w]=val[0];
+             else
+             dp[0][w]=0;
+         }
+         for(int i=1;i<=n;i++)
+         {
+             
+             for(int weig=0;weig<=capacity;weig++)
+             {
+                  int include=0;
+             if(wt[i]<=weig&&weig-wt[i]>=0)
+             include=dp[i-1][weig-wt[i]]+val[i];
+             int exclude=dp[i-1][weig]+0;
+              dp[i][weig]=max(include,exclude);
+             }
+             
+         }
+         return dp[n][capacity];
+     }
+     int SO1(int capacity,int wt[],int val[],int n)
+     {
+         vector<int> pre(capacity+1,0);
+         vector<int> curr(capacity+1,0);
+         for(int w=wt[0];w<=capacity;w++)
+         {
+             if(wt[0]<=capacity)
+             pre[w]=val[0];
+             else
+             pre[w]=0;
+         }
+         for(int i=1;i<=n;i++)
+         {
+             
+             for(int weig=0;weig<=capacity;weig++)
+             {
+                  int include=0;
+             if(wt[i]<=weig&&weig-wt[i]>=0)
+             include=pre[weig-wt[i]]+val[i];
+             int exclude=pre[weig]+0;
+              curr[weig]=max(include,exclude);
+             }
+             pre=curr;
+         }
+         return pre[capacity];
+     }
+     int SO2(int capacity,int wt[],int val[],int n)
+     {
+         vector<int> curr(capacity+1,0);
+         for(int w=wt[0];w<=capacity;w++)
+         {
+             if(wt[0]<=capacity)
+             curr[w]=val[0];
+             else
+             curr[w]=0;
+         }
+         for(int i=1;i<=n;i++)
+         {
+             
+             for(int weig=capacity;weig>=0;weig--)
+             {
+                  int include=0;
+             if(wt[i]<=weig&&weig-wt[i]>=0)
+             include=curr[weig-wt[i]]+val[i];
+             int exclude=curr[weig]+0;
+              curr[weig]=max(include,exclude);
+             }
+
+         }
+         return curr[capacity];
+     }
+    int knapSack(int W, int wt[], int val[], int n) 
+    { 
+    //   int ans=solverec(W,wt,val,n-1);
+    //   return ans;
+    
+    //   vector<vector<int>> dp(n+1,vector<int> (W+1,-1));
+    //   int ans=memo(W,wt,val,n-1,dp);
+    //   return ans;
+    //   int ans=tabulation(W,wt,val,n-1);
+    //   return ans;
+        // int ans=SO1(W,wt,val,n-1);
+        // return ans;
+            int ans=SO2(W,wt,val,n-1);
+        return ans;
+    }
+};
