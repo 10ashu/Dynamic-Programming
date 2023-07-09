@@ -1,0 +1,75 @@
+class Solution {
+public:
+   bool solverec(int index,vector<int>& nums,int sum)
+   {
+       int n=nums.size()-1;
+       if(index>n)
+       return false;
+     if(sum==0)
+     return true;
+     if(sum<0)
+     return false;
+     bool include=solverec(index+1,nums,sum-nums[index]);
+     bool exclude=solverec(index+1,nums,sum);
+     bool ans=include||exclude;
+     return ans;
+   }
+   int memo(int index,vector<int>& nums,int sum,vector<vector<int>> &dp)
+   {
+        int n=nums.size()-1;
+       if(index>n)
+       return 0;
+     if(sum==0)
+     return 1;
+     if(sum<0)
+     return 0;
+     if(dp[index][sum]!=-1)
+     return dp[index][sum];
+     int include=memo(index+1,nums,sum-nums[index],dp);
+     int exclude=memo(index+1,nums,sum,dp);
+     dp[index][sum]=(include||exclude);
+     return dp[index][sum];
+   }
+   int tabulation(vector<int>& nums,int sum)
+   {
+       int n=nums.size()-1;
+      vector<vector<int>> dp(nums.size(),vector<int>(sum+1,0));
+      for(int i=0;i<nums.size();i++)
+      {
+          dp[i][0]=1;
+      }
+      for(int index=n;index>=0;index--)
+      {
+          for(int s=1;s<=sum;s++)
+          {
+        
+              if(index+1<=n){
+                  int include=0;
+                  if(s-nums[index]>=0)
+                include=dp[index+1][s-nums[index]];
+                int exclude=dp[index+1][s];
+               dp[index][s]=(include||exclude);
+              }
+          }
+      }
+      return dp[0][sum];
+   }
+    bool canPartition(vector<int>& nums) {
+        int sum=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            sum=sum+nums[i];
+        }
+        if(sum%2!=0)
+        return false;
+        int n=sum/2;
+        int index=0;
+        // bool ans=solverec(index,nums,n);
+        // return ans;
+        // vector<vector<int>> dp(nums.size(),vector<int>(n+1,-1) );
+        // bool ans=memo(index,nums,n,dp);
+        // return ans;
+        bool ans=tabulation(nums,n);
+        return ans;
+    }
+};
