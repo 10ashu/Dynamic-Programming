@@ -1,0 +1,68 @@
+class Solution
+{
+    public:
+    //Function to find the maximum number of cuts.
+    int solverec(int n,int x,int y,int z)
+    {
+        if(n==0)
+        return 0;
+        if(n<0)
+        return INT_MIN;
+        int xans=1+solverec(n-x,x,y,z);
+        int yans=1+solverec(n-y,x,y,z);
+        int zans=1+solverec(n-z,x,y,z);
+        return max(xans,max(yans,zans));
+    }
+    int memo(int n,int x,int y,int z,vector<int>& dp)
+    {
+        if(n==0)
+        return 0;
+        if(n<0)
+        return INT_MIN;
+        if(dp[n]!=-1)
+        return dp[n];
+        int xans=1+memo(n-x,x,y,z,dp);
+        int yans=1+memo(n-y,x,y,z,dp);
+        int zans=1+memo(n-z,x,y,z,dp);
+        int ans=max(xans,max(yans,zans));
+        dp[n]=ans;
+        return dp[n];
+    }
+    int tabulation(int n,int x,int y,int z)
+    {
+        vector<int> dp(n+1,INT_MIN);
+        dp[0]=0;
+        for(int i=1;i<=n;i++)
+        {
+            int xans=INT_MIN,yans=INT_MIN,zans=INT_MIN;
+            if(i-x>=0)
+         xans=1+dp[i-x];
+        if(i-y>=0)
+        yans=1+dp[i-y];
+        if(i-z>=0)
+         zans=1+dp[i-z];
+        int ans=max(xans,max(yans,zans));
+        dp[i]=ans;
+        }
+         return dp[n];
+    }
+    int maximizeTheCuts(int n, int x, int y, int z)
+    {
+        // int ans=solverec(n,x,y,z);
+        // if(ans>0)
+        // return ans;
+        // else
+        // return 0;
+        // vector<int> dp(n+1,-1);
+        // int ans =memo(n,x,y,z,dp);
+        // if(ans>0)
+        // return ans;
+        // else
+        // return 0;
+        int ans =tabulation(n,x,y,z);
+        if(ans>0)
+        return ans;
+        else
+        return 0;
+    }
+};
