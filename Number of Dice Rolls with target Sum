@@ -1,0 +1,104 @@
+class Solution {
+public:
+  #define MOD 1000000007
+    int rec(int n,int k,int target)
+    {
+        if(n<0)
+        return 0;
+        if(n==0&&target==0)
+        return 1;
+        if(n!=0&&target==0)
+        return 0;
+        if(n==0&&target!=0)
+        return 0;
+        long long int ans=0;
+        for(int i=1;i<=k;i++)
+        {
+            long long int recans=0;
+            if(target-i>=0)
+             recans=rec(n-1,k,target-i);
+            ans=(ans+recans%MOD)%MOD;
+        }
+        return ans;
+    }
+    int memo(int n,int k,int target,vector<vector<long long int>> &dp)
+    {
+        if(n<0)
+        return 0;
+        if(n==0&&target==0)
+        return 1;
+        if(n!=0&&target==0)
+        return 0;
+        if(n==0&&target!=0)
+        return 0;
+        if(dp[n][target]!=-1)
+        return dp[n][target];
+        long long int ans=0;
+        for(int i=1;i<=k;i++)
+        {    
+            long long int recans=0;
+            if(target-i>=0)
+             recans=memo(n-1,k,target-i,dp);
+            ans=(ans+(recans)%MOD)%MOD;
+        }
+        dp[n][target]=ans;
+        return dp[n][target];
+    }
+    int tabulation(int n,int k,int target)
+    {
+        vector<vector<long long int>> dp(n+1,vector<long long int> (target+1,0));
+        dp[0][0]=1;
+        for(int dice=1;dice<=n;dice++)
+        {
+            for(int s=1;s<=target;s++)
+            {
+                 long long int ans=0;
+               for(int i=1;i<=k;i++)
+               {    
+                   long long int recans=0;
+                    if(s-i>=0)
+                    recans=dp[dice-1][s-i];
+                    ans=(ans+(recans)%MOD)%MOD;
+               }
+                 dp[dice][s]=ans;   
+            }
+        }
+        return dp[n][target];
+    }
+    int SO(int n,int k,int target)
+    {
+        vector<long long int> pre(target+1,0);
+        vector<long long int> curr(target+1,0);
+         pre[0]=1;
+        for(int dice=1;dice<=n;dice++)
+        {
+            for(int s=1;s<=target;s++)
+            {
+                 long long int ans=0;
+               for(int i=1;i<=k;i++)
+               {    
+                   long long int recans=0;
+                    if(s-i>=0)
+                    recans=pre[s-i];
+                    ans=(ans+(recans)%MOD)%MOD;
+               }
+                 curr[s]=ans;  
+                
+            }
+             pre=curr; 
+        }
+        return pre[target];
+    }
+    
+    int numRollsToTarget(int n, int k, int target) {
+        // int ans=rec(n,k,target);
+        // return ans;
+        // vector<vector<long long int>> dp(n+1,vector<long long int> (target+1,-1));
+        // int ans=memo(n,k,target,dp);
+        // return ans;
+        // int ans=tabulation(n,k,target);
+        // return ans;
+        int ans=SO(n,k,target);
+        return ans;
+    }
+};
