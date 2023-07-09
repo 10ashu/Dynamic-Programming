@@ -1,0 +1,58 @@
+class Solution {
+public:
+    int rec(vector<int>& nums,int target)
+    {
+       if(target==0)
+       return 1;
+       if(target<0)
+       return 0;
+       int ans=0;
+        for(int i=0;i<nums.size();i++)
+        {  
+            ans=ans+rec(nums,target-nums[i]);
+        }
+        return ans;
+    }
+    int memo(vector<int>& nums,int target,vector<int>& dp)
+    {
+        if(target==0)
+        return 1;
+        if(target<0)
+        return 0;
+        if(dp[target]!=-1)
+        return dp[target];
+        int ans=0;
+        for(int i=0;i<nums.size();i++)
+        {
+           ans=ans+memo(nums,target-nums[i],dp);
+        }
+        dp[target]=ans;
+        return dp[target];
+    }
+    int tabulation(vector<int>& nums,int target)
+    {
+        vector<int> dp(target+1,0);
+        dp[0]=1;
+      
+        for(int t=1;t<=target;t++)
+        {
+              long long int ans=0;
+          for(int i=0;i<nums.size();i++)
+           {
+               if(t-nums[i]>=0)
+              ans=ans+dp[t-nums[i]];
+           }
+           dp[t]=ans;   
+        }
+        return dp[target];
+    }
+    int combinationSum4(vector<int>& nums, int target) {
+        // int ans=rec(nums,target);
+        // return ans;
+        // vector<int> dp(target+1,-1);
+        // int ans=memo(nums,target,dp);
+        // return ans;
+        int ans=tabulation(nums,target);
+        return ans;
+    }
+};
