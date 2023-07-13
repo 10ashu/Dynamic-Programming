@@ -1,0 +1,64 @@
+class Solution {
+public:
+   int rec(int start,int end)
+   {
+       if(start>=end)
+       return 0;
+       int ans=INT_MAX;
+       for(int i=start;i<=end;i++)
+       {
+            ans=min(ans,i+max(rec(start,i-1),rec(i+1,end)));
+       }
+       return ans;
+      
+   }
+   int memo(int start,int end,vector<vector<int>> &dp)
+   {
+        if(start>=end)
+       return 0;
+       if(dp[start][end]!=-1)
+       return dp[start][end];
+       int ans=INT_MAX;
+       for(int i=start;i<=end;i++)
+       {
+            ans=min(ans,i+max(memo(start,i-1,dp),memo(i+1,end,dp)));
+       }
+       dp[start][end]=ans;
+       return dp[start][end];
+      
+   }
+    int tab(int n)
+   {
+   
+       vector<vector<int> > dp(n+5,vector<int> (n+5,0));
+        for(int start=n;start>=1;start--)
+        {
+          for(int end=1;end<=n;end++)
+            {
+            if(start>=end)
+            continue;
+            else
+            {
+             int ans=INT_MAX;
+             for(int i=start;i<=end;i++)
+                {
+                    int maxi=i+max(dp[start][i-1],dp[i+1][end]);
+                    ans=min(ans,maxi);
+        
+                }
+             dp[start][end]=ans;
+                 }
+            }
+            }
+            return dp[1][n];
+   }
+    int getMoneyAmount(int n) {
+        // int ans=rec(1,n);
+        // return ans;
+        // vector<vector<int> > dp(n+1,vector<int> (n+1,-1));
+        // int ans=memo(1,n,dp);
+        // return ans;
+        int ans=tab(n);
+        return ans;
+    }
+};
