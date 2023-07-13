@@ -1,0 +1,78 @@
+class Solution {
+public:
+    static bool compare(vector<int>& a,vector<int>& b)
+    {
+        if(a[0]==b[0])
+            return a[1]>b[1];
+        return a[0]<b[0];
+    }
+    bool check(vector<int> &a,vector<int> &b)
+    {
+        bool ans=false;
+         if(a[1]>b[1])
+            return true;
+        if(a[0]==b[0]&&a[1]<b[1])
+        return true;
+        else
+        return false;
+       
+        return ans;
+    
+    }
+      int SO(vector<vector<int>>& nums)
+    {
+        // This solution is showing TLE
+         int n=nums.size();
+         vector<int> first(n+1,0);
+         vector<int> second(n+1,0);
+        for(int curr=n-1;curr>=0;curr-- )
+        {
+            for(int pre=curr-1;pre>=-1;pre--)
+            {
+                 int include=0;
+                if(pre==-1||check(nums[curr],nums[pre]))
+                 include=1+second[curr+1];
+        //exclude
+                   int exclude=0+second[pre+1];
+                     int ans=max(include,exclude);
+                    first[pre+1]=ans;
+            }
+            second=first;
+        }
+        return first[0];
+    }
+    int solveoptimal(vector< vector<int> >& arr)
+    {
+          if(arr.size()==0)
+          return 0;
+          vector<int> ans;
+          ans.push_back(arr[0][1]);
+          for(int i=1;i<arr.size();i++)
+          {
+              if(arr[i][1]>ans.back())
+              ans.push_back(arr[i][1]);
+              else
+              {
+                  int index=lower_bound(ans.begin(),ans.end(),arr[i][1])-ans.begin();
+                  ans[index]=arr[i][1];
+              }
+          }
+          return ans.size();
+    }
+    int maxEnvelopes(vector<vector<int>>& envelopes) {
+        sort(envelopes.begin(),envelopes.end(),compare);
+        // int ans=SO(envelopes);
+        // return ans;
+        // for(int i=0;i<envelopes.size();i++)
+        // {
+        //     for(int j=0;j<envelopes[i].size();j++)
+        //     {
+        //         cout<<envelopes[i][j]<<" ";
+        //     }
+        //     cout<<endl;
+        // }
+        // return 0;
+        int ans=solveoptimal(envelopes);
+        return ans;
+    }
+};
