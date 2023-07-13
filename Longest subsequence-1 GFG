@@ -1,0 +1,67 @@
+class Solution{
+public:
+//   int itisgivingwrongans{
+//          if(N<=1)
+//         return N;
+//         int ans=0;
+//         unordered_map<int,int> dp;
+//         for(int i=0;i<N;i++)
+//         {
+//             int temp=A[i]-1;
+//             int temp2=A[i]+1;
+//             int cnt1=0;
+//             int cnt2=0;
+//             if(dp.count(temp))
+//             cnt1=dp[temp];
+//           else if(dp.count(temp2))
+//             cnt2=dp[temp2];
+//             dp[A[i]]=1+cnt1+cnt2;
+//             ans=max(ans,dp[A[i]]);
+//         }
+//         return ans;
+//   }
+   int memo(int arr[],int pre,int curr,vector<vector<int>> &dp,int n)
+   {
+      if(curr>=n)
+      return 0;
+      if(dp[curr][pre+1]!=-1)
+      return dp[curr][pre+1];
+      int include=0;
+      if(pre==-1||(arr[curr]-arr[pre])==1||(arr[curr]-arr[pre])==-1)
+      include=1+memo(arr,curr,curr+1,dp,n);
+      int exclude=0+memo(arr,pre,curr+1,dp,n);
+      int ans=max(include,exclude);
+      dp[curr][pre+1]=ans;
+      return dp[curr][pre+1];
+   }
+   int solveoptimal(int arr[],int n)
+   {
+       // Wrong Answer
+       // This code will only run if you do arr[curr]>arr[pre]
+       if(n==0)
+       return 0;
+       vector<int> ans;
+       ans.push_back(arr[0]);
+       for(int i=1;i<n;i++)
+       {
+           if((arr[i]-ans.back())==1||(arr[i]-ans.back())==-1)
+           ans.push_back(arr[i]);
+           else
+           {
+               int index=lower_bound(ans.begin(),ans.end(),arr[i])-ans.begin();
+               ans[index]=arr[i];
+           }
+       }
+       return ans.size();
+   }
+    int longestSubsequence(int N, int A[])
+    {
+    //     int pre=-1;
+    //     int curr=0;
+    //     vector<vector<int>> dp(N+1,vector<int> (N+1,-1));
+    //   int ans=memo(A,pre,curr,dp,N);
+    //   return ans;
+    int ans=solveoptimal(A,N);
+    return ans;
+    }
+};
