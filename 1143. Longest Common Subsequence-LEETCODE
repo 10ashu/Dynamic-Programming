@@ -1,0 +1,88 @@
+class Solution {
+public:
+    int rec(int i,int j,string a,string b)
+    {
+        if(i>=a.length())
+        return 0;
+        if(j>=b.length())
+        return 0;
+        int ans=0;
+        if(a[i]==b[j])
+        ans= 1+(rec(i+1,j+1,a,b));
+        else
+        ans=0+max(rec(i+1,j,a,b),rec(i,j+1,a,b));
+        return ans;  
+    }
+     int memo(int i,int j,string& a,string& b,vector<vector<int>> &dp)
+    {
+        if(i>=a.length())
+        return 0;
+        if(j>=b.length())
+        return 0;
+        if(dp[i][j]!=-1)
+        return dp[i][j];
+        int ans=0;
+        if(a[i]==b[j])
+        ans= 1+(memo(i+1,j+1,a,b,dp));
+        else
+        ans=0+max(memo(i+1,j,a,b,dp),memo(i,j+1,a,b,dp));
+        dp[i][j]=ans;
+        return dp[i][j];  
+    }
+    int tabulation(string& a,string& b)
+    {
+        
+      vector<vector<int>> dp(a.length()+5,vector<int>(b.length()+5,0)); 
+        int n1=a.length()-1;
+        int n2=b.length()-1;
+        for(int i=n1;i>=0;i--)
+        {
+            for(int j=n2;j>=0;j--)
+            {
+                   int ans=0;
+               if(a[i]==b[j])
+               ans= 1+dp[i+1][j+1];
+               else
+               ans=0+max(dp[i+1][j],dp[i][j+1]);
+               dp[i][j]=ans;
+            }
+        }
+        return dp[0][0];
+    }
+    int SO(string& a,string& b)
+    {
+        
+      vector<int> pre(b.length()+1,0);
+      vector<int> curr(b.length()+1,0);
+        int n1=a.length()-1;
+        int n2=b.length()-1;
+        for(int i=n1;i>=0;i--)
+        {
+            for(int j=n2;j>=0;j--)
+            {
+                   int ans=0;
+               if(a[i]==b[j])
+               ans= 1+curr[j+1];
+               else
+               ans=0+max(curr[j],pre[j+1]);
+               pre[j]=ans;
+            }
+            curr=pre;
+        }
+        return pre[0];
+    }
+  
+    int longestCommonSubsequence(string text1, string text2) {
+        // int i=0,j=0;
+        // int ans=rec(i,j,text1,text2);
+        // return ans;
+        // vector<vector<int>> dp(text1.length()+1,vector<int>(text2.length()+1,-1));
+        // int ans=memo(i,j,text1,text2,dp);
+        // return ans;
+        // int ans=tabulation(text1,text2);
+        // return ans;
+        int ans=SO(text1,text2);
+        return ans;
+       
+    }
+};
