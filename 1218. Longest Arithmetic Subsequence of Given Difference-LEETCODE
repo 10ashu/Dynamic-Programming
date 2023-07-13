@@ -1,0 +1,70 @@
+class Solution {
+public:
+   int memo(vector<int>& arr, int &difference,int pre,int curr,vector<vector<int>>& dp)
+   { 
+       // This code is showing TLE
+       if(curr>=arr.size())
+       return 0;
+       if(dp[curr][pre+1]!=-1)
+       return dp[curr][pre+1];
+       int include=0;
+       if(pre==-1||(arr[curr]-arr[pre])==difference)
+       include=1+memo(arr,difference,curr,curr+1,dp);
+       int exclude=0+memo(arr,difference,pre,curr+1,dp);
+       int ans=max(include,exclude);
+       dp[curr][pre+1]=ans;
+       return dp[curr][pre+1];
+
+   }
+   int solveoptimal(vector<int>& arr,int &difference)
+   {
+       // This code is showing runtime error 
+       if(arr.size()==0)
+       return 0;
+       vector<int> ans;
+       ans.push_back(arr[0]);
+       for(int i=1;i<arr.size();i++)
+       {
+           int last=ans.back();
+           if((arr[i]-last)==difference)
+           ans.push_back(arr[i]);
+           else
+           {
+               int index=lower_bound(ans.begin(),ans.end(),arr[i])-ans.begin();
+               ans[index]=arr[i];
+           }
+       }
+       
+       return ans.size();
+   }
+    int usingmap(vector<int>& arr,int difference)
+    {
+        int n=arr.size();
+           if(n<=1)
+           return n;
+           unordered_map<int,int> dp;
+           int ans=0;
+           for(int i=0;i<arr.size();i++)
+           {
+               int cnt=0;
+               int temp=arr[i]-difference;
+               if(dp.count(temp))
+               cnt=dp[temp];
+              dp[arr[i]]=cnt+1;
+              ans=max(ans,dp[arr[i]]);
+           }
+           return ans;
+    } 
+    int longestSubsequence(vector<int>& arr, int difference) {
+        // int pre=-1;
+        // int curr=0;
+        // int n=arr.size();
+        // vector< vector<int> > dp(n+1,vector<int> (n+1,-1));;
+        // int ans=memo(arr,difference,pre,curr,dp);
+        // return ans;
+        // int ans=solveoptimal(arr,difference);
+        // return ans;
+        int ans=usingmap(arr,difference);
+        return ans;
+    }
+};
