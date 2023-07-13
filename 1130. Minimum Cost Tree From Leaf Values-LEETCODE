@@ -1,0 +1,71 @@
+class Solution {
+public:
+
+    int rec(vector<int>& arr,int start,int end,map<pair<int,int>,int> &maxi)
+    {
+          if(start>=end)
+          return 0;
+          int ans=INT_MAX;
+          for(int i=start;i<end;i++)
+          {
+              ans=min(ans,maxi[{start,i}]*maxi[{i+1,end}]+rec(arr,start,i,maxi)+rec(arr,i+1,end,maxi));
+          }
+          return ans;
+    }
+    int memo(vector<int>& arr,int start,int end,map<pair<int,int>,int> &maxi,vector<vector<int>> &dp)
+    {
+         if(start>=end)
+          return 0;
+          if(dp[start][end]!=-1)
+          return dp[start][end];
+          int ans=INT_MAX;
+          for(int i=start;i<end;i++)
+          {
+              ans=min(ans,maxi[{start,i}]*maxi[{i+1,end}]+memo(arr,start,i,maxi,dp)+memo(arr,i+1,end,maxi,dp));
+          }
+          dp[start][end]=ans;
+          return dp[start][end];
+    }
+    int tabulation(vector<int>& arr,int start,int end,map<pair<int,int>,int> &maxi)
+    {
+        int n=arr.size()-1;
+        vector<vector<int>> dp(n+2,vector<int> (n+2,0));
+        for(int start=n;start>=0;start--)
+        {
+          
+            for(int end=0;end<=n;end++)
+            {
+                 if(start>=end)
+                 continue;
+                   else{
+                int ans=INT_MAX;
+               for(int i=start;i<end;i++)
+               {
+               ans=min(ans,(maxi[{start,i}]*maxi[{i+1,end}]+dp[start][i]+dp[i+1][end]));
+               }
+              dp[start][end]=ans;
+            }
+            }
+        }
+        return dp[0][n];
+    }
+    int mctFromLeafValues(vector<int>& arr) {
+        map<pair<int,int>,int> maxi;
+        for(int i=0;i<arr.size();i++)
+        {
+            maxi[{i,i}]=arr[i];
+            for(int j=i+1;j<arr.size();j++)
+            {
+                maxi[{i,j}]=max(arr[j],maxi[{i,j-1}]);
+            }
+        }
+        int n=arr.size()-1;
+        // int ans=rec(arr,0,n,maxi);
+        // return ans;
+        // vector<vector<int>> dp(n+2,vector<int> (n+2,-1));
+        // int ans=memo(arr,0,n,maxi,dp);
+        // return ans;
+         int ans=tabulation(arr,0,n,maxi);
+         return ans;
+    }
+};
