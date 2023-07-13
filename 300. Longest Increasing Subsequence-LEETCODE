@@ -1,0 +1,109 @@
+class Solution {
+public:
+    int rec(vector<int>& nums,int pre,int curr)
+    {
+        if(curr>=nums.size())
+        return 0;
+       
+         
+        // include
+        int include=0;
+        if(pre==-1||nums[curr]>nums[pre])
+        include=1+rec(nums,curr,curr+1);
+        //exclude
+        int exclude=0+rec(nums,pre,curr+1);
+        int ans=max(include,exclude);
+        return ans;
+    } 
+     int memo(vector<int>& nums,int pre,int curr,vector<vector<int>> &dp)
+    {
+        if(curr>=nums.size())
+        return 0;
+        if(dp[curr][pre+1]!=-1)
+        return dp[curr][pre+1]; 
+         
+        // include
+        int include=0;
+        if(pre==-1||nums[curr]>nums[pre])
+        include=1+memo(nums,curr,curr+1,dp);
+        //exclude
+        int exclude=0+memo(nums,pre,curr+1,dp);
+        int ans=max(include,exclude);
+        dp[curr][pre+1]=ans;
+        return dp[curr][pre+1];
+    } 
+    int tabulation(vector<int>& nums)
+    {
+         int n=nums.size();
+       vector<vector<int>> dp(n+1,vector<int> (n+1,0));
+        for(int curr=n-1;curr>=0;curr-- )
+        {
+            for(int pre=curr-1;pre>=-1;pre--)
+            {
+                 int include=0;
+                if(pre==-1||nums[curr]>nums[pre])
+                 include=1+dp[curr+1][curr+1];
+        //exclude
+                   int exclude=0+dp[curr+1][pre+1];
+                     int ans=max(include,exclude);
+                    dp[curr][pre+1]=ans;
+            }
+        }
+        return dp[0][0];
+    }
+      int SO(vector<int>& nums)
+    {
+         int n=nums.size();
+         vector<int> first(n+1,0);
+         vector<int> second(n+1,0);
+        for(int curr=n-1;curr>=0;curr-- )
+        {
+            for(int pre=curr-1;pre>=-1;pre--)
+            {
+                 int include=0;
+                if(pre==-1||nums[curr]>nums[pre])
+                 include=1+second[curr+1];
+        //exclude
+                   int exclude=0+second[pre+1];
+                     int ans=max(include,exclude);
+                    first[pre+1]=ans;
+            }
+            second=first;
+        }
+        return first[0];
+    }
+    int solveoptimal(vector<int>& arr)
+    {
+         if(arr.size()==0)
+         return 0;
+         vector<int> ans;
+         ans.push_back(arr[0]);
+         for(int i=1;i<arr.size();i++)
+         {
+             if(arr[i]>ans.back())
+             ans.push_back(arr[i]);
+             else
+             {
+                 int index=lower_bound(ans.begin(),ans.end(),arr[i])-ans.begin();
+                 ans[index]=arr[i];
+             }
+         }
+         return ans.size();
+    }
+    int lengthOfLIS(vector<int>& nums) {
+        // int pre=-1;
+        // int curr=0;
+        // int ans=rec(nums,pre,curr);
+        // return ans;
+    //    int n=nums.size();
+    //    vector<vector<int>> dp(n,vector<int> (n,-1));
+    //     int ans=memo(nums,pre,curr,dp);
+    //     return ans;
+        // int ans=tabulation(nums);
+        // return ans;
+        // int ans=SO(nums);
+        // return ans;
+        int ans=solveoptimal(nums);
+        return ans;
+    }
+};
