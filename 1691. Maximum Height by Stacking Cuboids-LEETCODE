@@ -1,0 +1,88 @@
+class Solution {
+public:
+    bool check(vector<int> &a,vector<int> &b)
+    {
+        if(a[0]>=b[0]&&a[1]>=b[1]&&a[2]>=b[2])
+        return true;
+        return false;
+    }
+      int rec(vector<vector<int>> &nums,int pre,int curr)
+     {
+        if(curr>=nums.size())
+        return 0;
+       
+         
+        // include
+        int include=0;
+        if(pre==-1||check(nums[curr],nums[pre]))
+        include=nums[curr][2]+rec(nums,curr,curr+1);
+        //exclude
+        int exclude=0+rec(nums,pre,curr+1);
+        int ans=max(include,exclude);
+        return ans;
+    } 
+     int memo(vector<vector<int>> &nums,int pre,int curr,vector<vector<int>> &dp)
+     {
+         //THIS CODE IS SHOWING RUNTIME ERROR
+        if(curr>=nums.size())
+        return 0;
+       
+       if(dp[curr][pre+1]!=-1)
+       return dp[curr][pre+1];  
+        // include
+        int include=0;
+        if(pre==-1||check(nums[curr],nums[pre]))
+        include=nums[curr][2]+memo(nums,curr,curr+1,dp);
+        //exclude
+        int exclude=0+memo(nums,pre,curr+1,dp);
+        int ans=max(include,exclude);
+        dp[curr][pre+1]=ans;
+        return dp[curr][pre+1];
+    } 
+        int SO(vector<vector<int>>& nums)
+    {
+         int n=nums.size();
+         vector<int> first(n+1,0);
+         vector<int> second(n+1,0);
+        for(int curr=n-1;curr>=0;curr-- )
+        {
+            for(int pre=curr-1;pre>=-1;pre--)
+            {
+                 int include=0;
+                if(pre==-1||check(nums[curr],nums[pre]))
+                 include=nums[curr][2]+second[curr+1];
+        //exclude
+                   int exclude=0+second[pre+1];
+                     int ans=max(include,exclude);
+                    first[pre+1]=ans;
+            }
+            second=first;
+        }
+        return first[0];
+    }
+    int maxHeight(vector<vector<int>>& cuboids) {
+        for(auto &a: cuboids)
+        {
+            sort(a.begin(),a.end());
+        }
+        sort(cuboids.begin(),cuboids.end());
+        // for(int i=0;i<cuboids.size();i++)
+        // {
+        //     for(int j=0;j<cuboids[i].size();j++)
+        //     {
+        //         cout<<cuboids[i][j]<<" ";
+        //     }
+        //   cout<<endl;
+        // }
+        // return 0;
+        // LIS VARIANT
+        // int pre=-1;
+        // int curr=0;
+        // int n=cuboids.size();
+        // vector<vector<int>> dp(n+1,vector<int> (4,-1));
+        // int ans=rec(cuboids,pre,curr);
+        // return ans;
+        int ans=SO(cuboids);
+        return ans;
+    }
+};
