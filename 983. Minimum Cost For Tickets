@@ -1,0 +1,65 @@
+class Solution {
+public:
+    // int rec(int index,vector<int>& days, vector<int>& costs)
+    // {
+    //     int n=days.size();
+    //         if(index>=n)
+    //         return 0;
+    //         int pass1=costs[0]+rec(index+1,days,costs);
+    //         int i=index;
+    //         for(; i<n && days[i]<days[index]+7;i++);
+    //         int pass2=costs[1]+rec(i,days,costs);
+    //          i=index;
+    //         for(;i<n && days[i]<days[index]+30;i++);
+    //         int pass3=costs[2]+rec(i,days,costs);
+    //         int ans=min(pass1,min(pass2,pass3));
+    //         return ans;
+    // }
+    int memo(int index,vector<int>& days, vector<int>& costs,vector<int> &dp)
+    {
+             int n=days.size();
+            if(index>=n)
+            return 0;
+            if(dp[index]!=-1)
+            return dp[index];
+            int pass1=costs[0]+memo(index+1,days,costs,dp);
+            int i=index;
+            for(; i<n && days[i]<days[index]+7;i++);
+            int pass2=costs[1]+memo(i,days,costs,dp);
+             i=index;
+            for(;i<n && days[i]<days[index]+30;i++);
+            int pass3=costs[2]+memo(i,days,costs,dp);
+            int ans=min(pass1,min(pass2,pass3));
+            dp[index]=ans;
+            return dp[index];
+    }
+    int tab(vector<int>& days,vector<int>& costs)
+    {
+        int n=days.size();
+        vector<int> dp(365,0);
+        for(int index=n-1;index>=0;index--)
+        {
+               int pass1=costs[0]+ dp[index+1];
+            int i=index;
+            for(; i<n && days[i]<days[index]+7;i++);
+            int pass2=costs[1]+dp[i];
+             i=index;
+            for(;i<n && days[i]<days[index]+30;i++);
+            int pass3=costs[2]+dp[i];
+            int ans=min(pass1,min(pass2,pass3));
+            dp[index]=ans;
+        }
+        return dp[0];
+    }
+    int mincostTickets(vector<int>& days, vector<int>& costs) {
+        // int index=0;
+        // int ans=rec(index,days,costs);
+        // return ans;
+        // int index=0;
+        //   vector<int> dp(days.size()+1,-1);
+        //  int ans=memo(index,days,costs,dp);
+        //  return ans;
+        int ans=tab(days,costs);
+        return ans;
+    }
+};
