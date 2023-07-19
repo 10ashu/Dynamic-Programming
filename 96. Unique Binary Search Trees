@@ -1,0 +1,37 @@
+class Solution {
+public:
+    int rec(int n)
+    {
+        if(n<=1)
+        return 1;
+      
+        int ans=0;
+       for(int i=1;i<=n;i++)
+       {
+           ans=ans+rec(i-1)*rec(n-i);
+       }
+       return ans;
+    }
+     int memo(int n,vector<int> &dp)
+    {
+        if(n<=1)
+        return 1;
+        if(dp[n]!=-1)
+        return dp[n];
+      
+        int ans=0;
+       for(int i=1;i<=n;i++)
+       {
+           ans=ans+memo(i-1,dp)*memo(n-i,dp);
+       }
+       dp[n]=ans;
+       return ans;
+    }
+    int numTrees(int n) {
+    //    int ans=rec(n);
+    //    return ans;
+    vector<int> dp(n+1,-1);
+    int ans=memo(n,dp);
+    return ans;
+    }
+};
