@@ -1,0 +1,120 @@
+class Solution {
+public:
+   int rec(int i,int j,string &a,string &b)
+   {
+     if(i>=a.length())
+     return b.length()-j;
+     if(j>=b.length())
+     return a.length()-i;
+     int ans=0; 
+     if(a[i]==b[j])
+     ans=rec(i+1,j+1,a,b);
+     else
+     {
+         int replace=1+rec(i+1,j+1,a,b);
+         int insert=1+rec(i,j+1,a,b);
+         int deleted=1+rec(i+1,j,a,b);
+         ans=min(replace,min(insert,deleted));
+     }
+     return ans;
+   }
+    int memo(int i,int j,string &a,string &b,vector<vector<int>> &dp)
+   {
+     if(i>=a.length())
+     return b.length()-j;
+     if(j>=b.length())
+     return a.length()-i;
+     if(dp[i][j]!=-1)
+     return dp[i][j];
+     int ans=0; 
+     if(a[i]==b[j])
+     ans=memo(i+1,j+1,a,b,dp);
+     else
+     {
+         int replace=1+memo(i+1,j+1,a,b,dp);
+         int insert=1+memo(i,j+1,a,b,dp);
+         int deleted=1+memo(i+1,j,a,b,dp);
+         ans=min(replace,min(insert,deleted));
+     }
+     dp[i][j]=ans;
+     return dp[i][j];
+   }
+    int tab(string word1,string word2)
+    {
+        vector<vector<int>> dp(word1.length()+5,vector<int> (word2.length()+5,0));
+        for(int i=0;i<=word2.length();i++)
+        {
+            dp[word1.length()][i]=word2.length()-i;
+        }
+        for(int j=0;j<=word1.length();j++)
+        {
+            dp[j][word2.length()]=word1.length()-j;
+        }
+        for(int i=word1.length()-1;i>=0;i--)
+        {
+            for(int j=word2.length()-1;j>=0;j--)
+            {
+                 int ans=0; 
+             if(word1[i]==word2[j])
+            ans=dp[i+1][j+1];
+     else
+     {
+         int replace=1+dp[i+1][j+1];
+         int insert=1+dp[i][j+1];
+         int deleted=1+dp[i+1][j];
+         ans=min(replace,min(insert,deleted));
+     }
+     dp[i][j]=ans;
+            }
+        }
+        return dp[0][0];
+    }
+    int SO(string word1,string word2)
+    {
+        vector<int> curr(word2.length()+1,0);
+        vector<int> next(word2.length()+1,0);
+         for(int i=0;i<=word2.length();i++)
+          {
+            next[i]=word2.length()-i;
+           }
+         
+        
+              
+        for(int i=word1.length()-1;i>=0;i--)
+        {
+                curr[word2.length()]=word1.length()-i;
+            for(int j=word2.length()-1;j>=0;j--)
+            {
+                 int ans=0; 
+             if(word1[i]==word2[j])
+            ans=next[j+1];
+     else
+     {
+         int replace=1+next[j+1];
+         int insert=1+curr[j+1];
+         int deleted=1+next[j];
+         ans=min(replace,min(insert,deleted));
+     }
+     curr[j]=ans;
+            }
+            next=curr;
+        }
+        return curr[0];
+    }
+    int minDistance(string word1, string word2) {
+        int i=0,j=0;
+        if(word1.length()==0)
+        return word2.length();
+        if(word2.length()==0)
+        return word1.length();
+    //  int ans=rec(i,j,word1,word2);
+    //  return ans;
+    // vector<vector<int>> dp(word1.length(),vector<int> (word2.length(),-1));   
+    // int ans=memo(i,j,word1,word2,dp);
+    // return ans;
+    // int ans=tab(word1,word2);
+    // return ans;
+    int ans=SO(word1,word2);
+    return ans;
+    }
+};
