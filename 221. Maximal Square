@@ -1,0 +1,87 @@
+class Solution {
+public:
+    int rec(int i,int j,vector<vector<char>> &matrix,int& maxi)
+    {
+        if(i>=matrix.size()||j>=matrix[0].size())
+        return 0;
+       
+        int right=rec(i,j+1,matrix,maxi);
+        int diagonal=rec(i+1,j+1,matrix,maxi);
+        int down=rec(i+1,j,matrix,maxi);
+        if(matrix[i][j]=='1')
+        {
+         int ans=1+min(right,min(diagonal,down));
+         maxi=max(maxi,ans);
+         return ans;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+       int memo(int i,int j,vector<vector<char>> &matrix,int& maxi,vector<vector<int>> &dp)
+    {
+        if(i>=matrix.size()||j>=matrix[0].size())
+        return 0;
+       if(dp[i][j]!=-1)
+       return dp[i][j];
+        int right=memo(i,j+1,matrix,maxi,dp);
+        int diagonal=memo(i+1,j+1,matrix,maxi,dp);
+        int down=memo(i+1,j,matrix,maxi,dp);
+        if(matrix[i][j]=='1')
+        {
+         int ans=1+min(right,min(diagonal,down));
+         maxi=max(maxi,ans);
+         dp[i][j]=ans;
+         return dp[i][j];
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    int tab(vector<vector<char>>& matrix,int &maxi)
+    {
+        int n=matrix.size();
+        int m=matrix[0].size();
+        vector<vector<int>> dp(n+1,vector<int> (m+1,0));
+        for(int i=n-1;i>=0;i--)
+        {
+            for(int j=m-1;j>=0;j--)
+            {
+                  int right=dp[i][j+1];
+        int diagonal=dp[i+1][j+1];
+        int down=dp[i+1][j];
+        if(matrix[i][j]=='1')
+        {
+         int ans=1+min(right,min(diagonal,down));
+         maxi=max(maxi,ans);
+         dp[i][j]=ans;
+        }
+    
+            }
+        }
+        return dp[0][0];
+    }
+    int maximalSquare(vector<vector<char>>& matrix) {
+        // int i=0;
+        // int j=0;
+        // int maxi=0;
+        // rec(i,j,matrix,maxi);
+        // int area=maxi*maxi;
+        // return area;
+        //  int i=0;
+        // int j=0;
+        // int maxi=0;
+        // int n=matrix.size();
+        // int m=matrix[0].size();
+        // vector<vector<int>> dp(n+1,vector<int> (m+1,-1));
+        // memo(i,j,matrix,maxi,dp);
+        // int area=maxi*maxi;
+        // return area;
+        int maxi=0;
+        tab(matrix,maxi);
+        int area=maxi*maxi;
+        return area;
+    }
+};
