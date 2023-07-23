@@ -1,0 +1,73 @@
+class Solution {
+public:
+   int rec(int index,int time,vector<int>& s)
+   {
+    int n=s.size();
+    if(index>=n)
+    return 0;
+    int include=s[index]*(time+1)+rec(index+1,time+1,s);
+    int exclude=0+rec(index+1,time,s);
+    int ans=max(include,exclude);
+    return ans;
+   }
+    int memo(int index,int time,vector<int>& s,vector<vector<int>> &dp)
+   {
+    int n=s.size();
+    if(index>=n)
+    return 0;
+    if(dp[index][time]!=-1)
+    return dp[index][time];
+    int include=s[index]*(time+1)+memo(index+1,time+1,s,dp);
+    int exclude=0+memo(index+1,time,s,dp);
+    int ans=max(include,exclude);
+    return dp[index][time]=ans;
+   }
+   int tab(vector<int>& satisfaction)
+   {
+         int n=satisfaction.size();
+        vector<vector<int>> dp(n+1,vector<int> (n+1,0));
+        for(int i=n-1;i>=0;i--)
+        {
+            for(int j=i;j>=0;j--)
+            {
+                 int include=satisfaction[i]*(j+1)+dp[i+1][j+1];
+                 int exclude=0+dp[i+1][j];
+                 dp[i][j]=max(include,exclude);
+            }
+        }
+        return dp[0][0];
+   }
+     int SO(vector<int>& satisfaction)
+   {
+         int n=satisfaction.size();
+        vector<int> curr(n+1,0);
+        vector<int> next(n+1,0);
+
+        for(int i=n-1;i>=0;i--)
+        {
+            for(int j=i;j>=0;j--)
+            {
+                 int include=satisfaction[i]*(j+1)+next[j+1];
+                 int exclude=0+next[j];
+                 curr[j]=max(include,exclude);
+            }
+            next=curr;
+        }
+        return curr[0];
+   }
+    int maxSatisfaction(vector<int>& satisfaction) {
+        sort(satisfaction.begin(),satisfaction.end());
+        // int index=0;
+        // int time=0;
+         // int ans=rec(index,time,satisfaction);
+        // return ans;
+        // int n=satisfaction.size();
+        // vector<vector<int>> dp(n+1,vector<int> (n+1,-1));
+        // int ans=memo(index,time,satisfaction,dp);
+        // return ans;
+        // int ans=tab(satisfaction);
+        // return ans;
+        int ans=SO(satisfaction);
+        return ans;
+    }
+};
