@@ -1,0 +1,25 @@
+class Solution {
+	public:
+	int memo(string &str,string &str2,int i,int j,vector<vector<int>> &dp)
+	{
+	    int n=str.length();
+	    if(i==n||j==n)
+	    return 0;
+	    if(dp[i][j]!=-1)
+	    return dp[i][j];
+	    int include=0;
+	    if(str[i]==str2[j] && i!=j)
+	    include=1+memo(str,str2,i+1,j+1,dp);
+	    int exclude=0+max(memo(str,str2,i+1,j,dp),memo(str,str2,i,j+1,dp));
+	    int ans=max(include,exclude);
+	    return dp[i][j]=ans;
+	}
+		int LongestRepeatingSubsequence(string str){
+		    int i=0;
+		    int j=0;
+		    string str2=str;
+		    int n=str.length();
+		    vector<vector<int>> dp(n,vector<int> (n,-1));
+		    int ans=memo(str,str2,i,j,dp);
+		    return ans;
+		}
